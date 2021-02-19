@@ -84,7 +84,26 @@
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
-        // TODO
+        let output = document.getElementById("output");
+        while(output.firstChild){
+          output.removeChild(output.firstChild);
+        }
+
+        document.getElementById("recordForm").style.display = "none";
+        document.getElementById("recordIDcontainer").style.display = "none";
+        let endpt = document.getElementById("endpoint").value;
+
+        fetch(endpt)
+          .then( response => {return response.json()})
+          .then( data => {
+            let newNode = document.createTextNode(JSON.stringify(data));
+            document.getElementById("output").appendChild(newNode);
+          })
+          .catch( err => {
+            let newNode = document.createTextNode(err);
+            document.getElementById("output").appendChild(newNode);
+          });
+          
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -92,7 +111,26 @@
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
-        // TODO
+        let output = document.getElementById("output");
+        while(output.firstChild){
+          output.removeChild(output.firstChild);
+        }
+        document.getElementById("recordForm").style.display = "none";
+        document.getElementById("recordIDcontainer").style.display = "none";
+        let id = prompt("Enter record ID");
+        let endpt = document.getElementById("endpoint").value;
+        let url = endpt + '/' + id;
+
+        fetch(url)
+          .then( response => {return response.json()})
+          .then( data => {
+            let newNode = document.createTextNode(JSON.stringify(data));
+            document.getElementById("output").appendChild(newNode);
+          })
+          .catch( err => {
+            let newNode = document.createTextNode(err);
+            document.getElementById("output").appendChild(newNode);
+          });
       }
 
       // This function should use fetch to create one entry in the given endpoint.
@@ -100,7 +138,8 @@
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
       function createRecord() {
-        // TODO
+        document.getElementById("recordForm").style.display = "inline";
+        document.getElementById("recordIDcontainer").style.display = "none";
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
@@ -108,7 +147,13 @@
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
       function updateRecord() {
-        // TODO
+        let output = document.getElementById("output");
+        while(output.firstChild){
+          output.removeChild(output.firstChild);
+        }
+
+        document.getElementById("recordForm").style.display = "inline";
+        document.getElementById("recordIDcontainer").style.display = "inline";
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -117,7 +162,10 @@
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
       // delete all, only delete one.
       function deleteRecord() {
-        // TODO
+        let output = document.getElementById("output");
+        while(output.firstChild){
+          output.removeChild(output.firstChild);
+        }
       }
 
       window.addEventListener('DOMContentLoaded', () => {
