@@ -160,6 +160,20 @@
 		          "title": auth,
 		          "author": ttl
             }),
+          })
+          .then( response => {
+            if(response.ok) {
+              return response.json();
+            } else {
+              document.getElementById("output").innerHTML = "Network Error:404";
+              throw new Error("Network Error:404");
+            }
+          })
+          .then( data => {
+            document.getElementById("output").innerHTML = JSON.stringify(data);
+          })
+          .catch( err => {
+            console.log(err);
           });
         }       
       }
@@ -168,10 +182,44 @@
       // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function updateRecord() {
-        let output = document.getElementById("output");
-        document.getElementById("recordForm").style.display = "inline";
-        document.getElementById("recordIDcontainer").style.display = "inline";
+      function updateRecord(x) {
+        if(x == "show") {
+          let output = document.getElementById("output");
+          document.getElementById("recordForm").style.display = "inline";
+          document.getElementById("recordIDcontainer").style.display = "inline";
+        } else {
+          let auth = document.getElementById("author").value;
+          let ttl = document.getElementById("title").value;
+          let id = document.getElementById("recordID").value;
+          let endpt = document.getElementById("endpoint").value;
+          let url = endpt + '/' + id;
+        
+          fetch(url, {
+	          method: 'PUT',
+            headers: {
+		          'Content-type': 'application/json'
+	          },
+	          body: JSON.stringify({
+              "id":'',
+		          "title": auth,
+		          "author": ttl
+            }),
+          })
+          .then( response => {
+            if(response.ok) {
+              return response.json();
+            } else {
+              document.getElementById("output").innerHTML = "Network Error:404";
+              throw new Error("Network Error:404");
+            }
+          })
+          .then( data => {
+            document.getElementById("output").innerHTML = JSON.stringify(data);
+          })
+          .catch( err => {
+            console.log(err);
+          });
+        }
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -181,6 +229,28 @@
       // delete all, only delete one.
       function deleteRecord() {
         let output = document.getElementById("output");
+        document.getElementById("recordForm").style.display = "none";
+        document.getElementById("recordIDcontainer").style.display = "none";
+        let id = prompt("Enter record ID");
+        let endpt = document.getElementById("endpoint").value;
+        let url = endpt + '/' + id;
+
+        fetch(url, {
+	          method: 'DELETE',        
+        })
+        .then(response => {
+          if(response.ok) {
+            fetchAll();
+            document.getElementById("action").value = "List All";
+            return response.json();
+          } else {
+            document.getElementById("output").innerHTML = "Network Error:404";
+            throw new Error("Network Error:404");
+          }
+        })
+        .catch( err => {
+          console.log(err);
+        });
       }
 
       window.addEventListener('DOMContentLoaded', () => {
