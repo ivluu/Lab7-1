@@ -85,25 +85,26 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
         let output = document.getElementById("output");
-        while(output.firstChild){
-          output.removeChild(output.firstChild);
-        }
-
         document.getElementById("recordForm").style.display = "none";
         document.getElementById("recordIDcontainer").style.display = "none";
         let endpt = document.getElementById("endpoint").value;
 
         fetch(endpt)
-          .then( response => {return response.json()})
+          .then( response => {
+            if(response.ok) {
+              return response.json();
+            } else {
+              document.getElementById("output").innerHTML = "Network Error:404";
+              throw new Error("Network Error:404");
+            }
+          })
           .then( data => {
-            let newNode = document.createTextNode(JSON.stringify(data));
-            document.getElementById("output").appendChild(newNode);
+            document.getElementById("output").innerHTML = JSON.stringify(data);
           })
           .catch( err => {
-            let newNode = document.createTextNode(err);
-            document.getElementById("output").appendChild(newNode);
+            console.log(err);
           });
-          
+
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -112,9 +113,6 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
         let output = document.getElementById("output");
-        while(output.firstChild){
-          output.removeChild(output.firstChild);
-        }
         document.getElementById("recordForm").style.display = "none";
         document.getElementById("recordIDcontainer").style.display = "none";
         let id = prompt("Enter record ID");
@@ -122,14 +120,19 @@
         let url = endpt + '/' + id;
 
         fetch(url)
-          .then( response => {return response.json()})
+          .then( response => {
+            if(response.ok) {
+              return response.json();
+            } else {
+              document.getElementById("output").innerHTML = "Network Error:404";
+              throw new Error("Network Error:404");
+            }
+          })
           .then( data => {
-            let newNode = document.createTextNode(JSON.stringify(data));
-            document.getElementById("output").appendChild(newNode);
+            document.getElementById("output").innerHTML = JSON.stringify(data);
           })
           .catch( err => {
-            let newNode = document.createTextNode(err);
-            document.getElementById("output").appendChild(newNode);
+            console.log(err);
           });
       }
 
@@ -137,9 +140,28 @@
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
-        document.getElementById("recordForm").style.display = "inline";
-        document.getElementById("recordIDcontainer").style.display = "none";
+      function createRecord(x) {
+
+        if(x == "show") {
+          document.getElementById("recordForm").style.display = "inline";
+          document.getElementById("recordIDcontainer").style.display = "none";
+        } else {
+          let endpt = document.getElementById("endpoint").value;
+          let auth = document.getElementById("author").value;
+          let ttl = document.getElementById("title").value;
+        
+          fetch(endpt, {
+	          method: 'POST',
+            headers: {
+		          'Content-type': 'application/json'
+	          },
+	          body: JSON.stringify({
+              "id":'',
+		          "title": auth,
+		          "author": ttl
+            }),
+          });
+        }       
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
@@ -148,10 +170,6 @@
       // the writeup to view the URL pattern for create and update
       function updateRecord() {
         let output = document.getElementById("output");
-        while(output.firstChild){
-          output.removeChild(output.firstChild);
-        }
-
         document.getElementById("recordForm").style.display = "inline";
         document.getElementById("recordIDcontainer").style.display = "inline";
       }
@@ -163,9 +181,6 @@
       // delete all, only delete one.
       function deleteRecord() {
         let output = document.getElementById("output");
-        while(output.firstChild){
-          output.removeChild(output.firstChild);
-        }
       }
 
       window.addEventListener('DOMContentLoaded', () => {
